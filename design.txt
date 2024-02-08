@@ -1,0 +1,18 @@
+
+
+
+TODO:
+	[]move peices
+		[]identify peices
+			- "pa1" will look for a pawn on A1, if its there, the option to move it to a new square will appear
+		 
+	
+	[]choose peice
+
+
+choose_peice() -> checks if peice exists and returns the peice name (p, q, r, etc..)
+	
+move_peice() -> checks peice type
+			  gets move input
+			  check its move is valid
+			  makes move
