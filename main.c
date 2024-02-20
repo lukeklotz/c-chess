@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 
 #define ROW 8
@@ -79,11 +80,39 @@ void print_board(char* board[ROW][COL]){
 	
 void choose_move(char* coordinate){
 
-	char piece = coordinate[0];
-	char square = coordinate[1];
-    int col_number = coordinate[2];
+  //piece to move
+	char piece_to_move = coordinate[0];
+	char col_to_move = coordinate[1];
+ 	int row_number_to_move = atoi(&coordinate[2]);
+  
+  char col_number;
+  int row_number;
 
-	
+	bool isValid = false;
+
+  printf("Enter a square to move %s to", coordinate); 
+    
+  if (scanf("%c%c%d", &col_number, &row_number) == 2) {
+		printf("Letter: %c\n", col_number);
+		printf("Number: %d\n", row_number);
+  } else {
+		printf("Invalid input format.\n");
+  } 	
+  
+
+  if(toLowerCase(piece_to_move) == 'p'){
+    //pawn
+    //can move 2 squares from start 
+    //one square if no peice
+    if(square == square_to_move && ){
+    }
+  }
+  if(toLowerCase(piece_to_move) == 'n'){
+  
+  }
+  //TODO: check if square is valid to move to
+  //TODO: if peice between peice and dest square, the peice cannot move, unless its a knight
+  //TODO: check if peice can move in specified direction (knights in L shape, rooks up and down etc..)
 }
 
 int main() {
