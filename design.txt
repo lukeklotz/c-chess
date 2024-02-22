@@ -1,18 +1,13 @@
 
-
-
 TODO:
-	[]move peices
-		[]identify peices
-			- "pa1" will look for a pawn on A1, if its there, the option to move it to a new square will appear
-		 
-	
-	[]choose peice
 
+	- peices
+	[]move pawn
+	[]move knight
+	[]move rook
+	[]move bishop
+	[]move queen
+	[]move king
 
-choose_peice() -> checks if peice exists and returns the peice name (p, q, r, etc..)
-	
-move_peice() -> checks peice type
-			  gets move input
-			  check its move is valid
-			  makes move
+	- utility
+	[] fuction which handles converting square name (A4, E3, etc.. ) to grid coordinates

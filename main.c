@@ -101,7 +101,6 @@ bool check_for_collision_path(char *board[ROW][COL], char mov_col, int mov_row, 
 
 	if (curr_col == mov_col) {
 		// linear vertical move
-
 		int curr = curr_row;
 		while(curr < mov_row){
 			if(!check_for_collision(board, mov_col, curr)) return true;
@@ -116,9 +115,31 @@ bool check_for_collision_path(char *board[ROW][COL], char mov_col, int mov_row, 
 	return false;
 }
 
+void move_peice(char* board[ROW][COL], char mov_col, int mov_row, char* coordinate){
+	//square peice moves from
+	char curr_peice = coordinate[0];
+	char curr_col = coordinate[1]; // a, b, c
+ 	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
+
+	//find numeric coordinate on board
+	int row_num = curr_row - 'a';		
+	char col_num = abs(curr_col - 8);
+
+	printf("row num: %d\n", row_num);
+	printf("col num: %d\n", col_num);
+
+	board[row_num][col_num] == NULL;
+
+	row_num = mov_row - 'a';		
+	col_num = abs(mov_col - 8);
+
+	board[row_num][col_num] == &curr_peice;
+	
+}
+
 bool movePawn(char* board[ROW][COL], char mov_col, int mov_row, char* coordinate){
 	
-	//where we move from
+	//square peice moves from
 	char curr_col = coordinate[1]; // a, b, c
  	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
 
@@ -126,8 +147,15 @@ bool movePawn(char* board[ROW][COL], char mov_col, int mov_row, char* coordinate
 		//starting position
 		int mov_dist = mov_row - curr_row;
 		if(mov_dist <= 3){
-			printf("Move is %s!\n", check_for_collision_path(board, mov_col, mov_row, coordinate) 
-			? "valid" : "invalid");
+			if(check_for_collision_path(board, mov_col, mov_row, coordinate)){
+				printf("valid move\n");
+				//move peice
+				move_peice(board, mov_col, mov_row, coordinate);
+				return true;
+			} else {
+				printf("invalid move");
+				return false;
+			}
 		}
 	} else {
 		int mov_dist = mov_row - curr_row;
@@ -186,12 +214,12 @@ void choose_move(char* board[ROW][COL], char* coordinate){
 int main() {
 	char* coordinate = malloc(5);
 	char *board[ROW][COL] = {
-        	{"r", "", "b", "q", "k", "b", "n", "r"},
-        	{"", "p", "p", "p", "p", "p", "p", "p"},
-        	{"p", "", "", "", "", "", "", ""},
+        	{"r", "n", "b", "q", "k", "b", "n", "r"},
+        	{"p", "p", "p", "p", "p", "p", "p", "p"},
         	{"", "", "", "", "", "", "", ""},
         	{"", "", "", "", "", "", "", ""},
-        	{"n", "", "", "", "", "", "", ""},
+        	{"", "", "", "", "", "", "", ""},
+        	{"", "", "", "", "", "", "", ""},
         	{"P", "P", "P", "P", "P", "P", "P", "P"},
         	{"R", "N", "B", "Q", "K", "B", "N", "R"},
     	};	
