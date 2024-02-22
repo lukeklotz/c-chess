@@ -115,26 +115,25 @@ bool check_for_collision_path(char *board[ROW][COL], char mov_col, int mov_row, 
 	return false;
 }
 
-void move_peice(char* board[ROW][COL], char mov_col, int mov_row, char* coordinate){
+void move_peice(char *board[COL][ROW], char mov_col, int mov_row, char* coordinate){
 	//square peice moves from
 	char curr_peice = coordinate[0];
 	char curr_col = coordinate[1]; // a, b, c
  	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
 
 	//find numeric coordinate on board
-	int row_num = curr_row - 'a';		
-	char col_num = abs(curr_col - 8);
+	char col_num = curr_col - 'a';		
+	char row_num = abs(curr_row - 8);
 
 	printf("row num: %d\n", row_num);
 	printf("col num: %d\n", col_num);
 
-	board[row_num][col_num] == NULL;
+	board[col_num][row_num] = "";
 
 	row_num = mov_row - 'a';		
 	col_num = abs(mov_col - 8);
 
-	board[row_num][col_num] == &curr_peice;
-	
+	board[col_num][row_num] = curr_peice;
 }
 
 bool movePawn(char* board[ROW][COL], char mov_col, int mov_row, char* coordinate){
