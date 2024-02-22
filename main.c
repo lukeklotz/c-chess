@@ -2,16 +2,22 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 
 #define ROW 8
 #define COL 8
 
+void clearInputBuffer(){
+	int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 char* choose_piece(char* board[ROW][COL]){
 
-    char piece;
-  	char square;
-    int col_number;
+    char piece = ' ';
+  	char square = ' ';
+    int col_number = 0;
 
 	bool isValid = false;
 
@@ -24,17 +30,15 @@ char* choose_piece(char* board[ROW][COL]){
     } else {
 		printf("Invalid input format.\n");
     } 	
+
+	clearInputBuffer();
 	
 	// return coordinate 	
 	char* coordinate = malloc(5);
 	sprintf(coordinate,  "%c%c%d", piece, square, col_number);
 
 
-	//clear buffer
-	int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-
-
+	//find numeric coordinate on board
 	int row_on_board = square - 'a';		
 	col_number = abs(col_number - 8);
 
@@ -75,55 +79,119 @@ void print_board(char* board[ROW][COL]){
 	}
 	
 	printf("\n\n+-------------------+\n\n");
+}
+
+bool check_for_collision(char *board[ROW][COL], char mov_col, int mov_row){
+	//find numeric coordinate on board
+	int col = mov_col - 'a';		
+	int row = abs(mov_row - 8);
+
+	//printf("row: %d", row);
+	//printf("\ncol: %d", col);
+
+	if(board[row][col] == "") return false;
 	
+	return true;
+}
+
+bool check_for_collision_path(char *board[ROW][COL], char mov_col, int mov_row, char* coordinate){
+	//where player moves from
+	char curr_col = coordinate[1]; // a, b, c
+ 	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
+
+	if (curr_col == mov_col) {
+		// linear vertical move
+
+		int curr = curr_row;
+		while(curr < mov_row){
+			if(!check_for_collision(board, mov_col, curr)) return true;
+			curr++;
+		}
+	} else if(curr_row == mov_row) {
+		// linear horizontal move
+	} else {
+		// diagonal move
+	}
+
+	return false;
+}
+
+bool movePawn(char* board[ROW][COL], char mov_col, int mov_row, char* coordinate){
+	
+	//where we move from
+	char curr_col = coordinate[1]; // a, b, c
+ 	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
+
+	if(curr_col == mov_col && curr_row == 2){
+		//starting position
+		int mov_dist = mov_row - curr_row;
+		if(mov_dist <= 3){
+			printf("Move is %s!\n", check_for_collision_path(board, mov_col, mov_row, coordinate) 
+			? "valid" : "invalid");
+		}
+	} else {
+		int mov_dist = mov_row - curr_row;
+		if(mov_dist == 1){
+			printf("Move is %s!\n", check_for_collision_path(board, mov_col, mov_row, coordinate) 
+			? "valid" : "invalid");
+		}
+	}
+
+	//if curr_col == 2, then move 1 or 2 spaces is valid
+
+	//printf("\n moving: %c%d", curr_col, curr_row);
+	//printf("\n to: %c%d\n", mov_col, mov_row);
+
+	return false;
 }
 	
-void choose_move(char* coordinate){
+void choose_move(char* board[ROW][COL], char* coordinate){
 
-  //piece to move
+  	//piece to move
 	char piece_to_move = coordinate[0];
 	char col_to_move = coordinate[1];
  	int row_number_to_move = atoi(&coordinate[2]);
   
-  char col_number;
-  int row_number;
+  	char col_letter;
+  	int row_number;
 
 	bool isValid = false;
 
-  printf("Enter a square to move %s to", coordinate); 
-    
-  if (scanf("%c%c%d", &col_number, &row_number) == 2) {
-		printf("Letter: %c\n", col_number);
-		printf("Number: %d\n", row_number);
-  } else {
-		printf("Invalid input format.\n");
-  } 	
-  
+	printf("Enter a square to move %s to", coordinate); 
+		
+	if (scanf("%c%d", &col_letter, &row_number) == 2) {
+			printf("Letter: %c\n", col_letter);
+			printf("Number: %d\n", row_number);
+	} else {
+			printf("Invalid input format.\n");
+	} 	
 
-  if(toLowerCase(piece_to_move) == 'p'){
-    //pawn
-    //can move 2 squares from start 
-    //one square if no peice
-    if(square == square_to_move && ){
-    }
-  }
-  if(toLowerCase(piece_to_move) == 'n'){
-  
-  }
-  //TODO: check if square is valid to move to
-  //TODO: if peice between peice and dest square, the peice cannot move, unless its a knight
-  //TODO: check if peice can move in specified direction (knights in L shape, rooks up and down etc..)
+
+	if(tolower(piece_to_move) == 'p'){
+		//pawn
+		//can move 2 squares from start 
+		//one square if no peice
+		movePawn(board, col_letter, row_number, coordinate);
+	}
+	if(piece_to_move == 'n'){
+		//move knight
+	}
+
+	clearInputBuffer();
+	//TODO: check if square is valid to move to
+	//TODO: if peice between peice and dest square, the peice cannot move, unless its a knight
+	//TODO: check if peice can move in specified direction (knights in L shape, rooks up and down etc..)
 }
 
 int main() {
 	char* coordinate = malloc(5);
 	char *board[ROW][COL] = {
-        	{"r", "n", "b", "q", "k", "b", "n", "r"},
-        	{"p", "p", "p", "p", "p", "p", "p", "p"},
+        	{"r", "", "b", "q", "k", "b", "n", "r"},
+        	{"", "p", "p", "p", "p", "p", "p", "p"},
+        	{"p", "", "", "", "", "", "", ""},
         	{"", "", "", "", "", "", "", ""},
         	{"", "", "", "", "", "", "", ""},
-        	{"", "", "", "", "", "", "", ""},
-        	{"", "", "", "", "", "", "", ""},
+        	{"n", "", "", "", "", "", "", ""},
         	{"P", "P", "P", "P", "P", "P", "P", "P"},
         	{"R", "N", "B", "Q", "K", "B", "N", "R"},
     	};	
@@ -134,7 +202,7 @@ int main() {
 
 	while(!gameover){
 	coordinate = choose_piece(board);		
-	choose_move(coordinate);
+	choose_move(board, coordinate);
 		
 	}
 }
