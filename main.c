@@ -84,7 +84,7 @@ void print_board(char board[ROW][COL]){
 	printf("\n\n+-------------------+\n\n");
 }
 
-bool check_for_collision(char *board[ROW][COL], char mov_col, int mov_row){
+bool check_for_collision(char board[ROW][COL], char mov_col, int mov_row){
 	//find numeric coordinate on board
 	int col = mov_col - 'a';		
 	int row = abs(mov_row - 8);
@@ -92,13 +92,13 @@ bool check_for_collision(char *board[ROW][COL], char mov_col, int mov_row){
 	//printf("row: %d", row);
 	//printf("\ncol: %d", col);
 
-	if (strcmp(board[row][col], " ") == 0) {
+	if (strcmp(&board[row][col], " ") == 0) {
         return false; // No collision, the square is empty
     }	
 	return true;
 }
 
-bool check_for_collision_path(char *board[ROW][COL], char mov_col, int mov_row, char* coordinate){
+bool check_for_collision_path(char board[ROW][COL], char mov_col, int mov_row, char* coordinate){
 	//where player moves from
 	char curr_col = coordinate[1]; // a, b, c
  	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
@@ -132,12 +132,12 @@ void move_peice(char board[COL][ROW], char mov_col, int mov_row, char* coordinat
 	printf("row num: %d\n", row_num);
 	printf("col num: %d\n", col_num);
 
-	board[col_num][row_num] = "";
+	board[col_num][row_num] = ' ';
 
 	row_num = mov_row - 'a';		
 	col_num = abs(mov_col - 8);
 
-	board[col_num][row_num] = &curr_peice;
+	board[col_num][row_num] = curr_peice;
 }
 
 bool movePawn(char board[ROW][COL], char mov_col, int mov_row, char* coordinate){
@@ -232,7 +232,7 @@ int main() {
 	print_board(board);
 
 	while(!gameover){
-	coordinate = choose_piece(board);		
+	coordinate = choose_piece(&board);		
 	choose_move(board, coordinate);
 		
 	}
