@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <string.h>
 
 
 #define ROW 8
@@ -13,7 +14,7 @@ void clearInputBuffer(){
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-char* choose_piece(char* board[ROW][COL]){
+char *choose_piece(char board[ROW][COL]){
 
     char piece = ' ';
   	char square = ' ';
@@ -48,12 +49,13 @@ char* choose_piece(char* board[ROW][COL]){
 	printf("\n\n+------------------+\n\n");
 	
 	for(int i = 0; i < ROW; ++i){
+    printf("|");
 		for(int j = 0; j < COL; ++j){
-			if (i == col_number  && j == row_on_board && *board[i][j] == piece){
+			if (i == col_number  && j == row_on_board && board[i][j] == piece){
 				printf("%-3s", "X");
 				isValid = true;
 			} else {
-				printf("%-3s", board[i][j]);
+				printf("%-3c|", board[i][j]);
 			}
 		}
 		printf("\n");
@@ -67,13 +69,14 @@ char* choose_piece(char* board[ROW][COL]){
 
 }
 
-void print_board(char* board[ROW][COL]){
+void print_board(char board[ROW][COL]){
 	
 	printf("\n\n+------------------+\n\n");
 	
 	for(int i = 0; i < ROW; ++i){
+    printf("|");
 		for(int j = 0; j < COL; ++j){
-			printf("%-3s", board[i][j]);
+			printf("%-3c|", board[i][j]);
 		}
 		printf("\n");
 	}
@@ -89,8 +92,9 @@ bool check_for_collision(char *board[ROW][COL], char mov_col, int mov_row){
 	//printf("row: %d", row);
 	//printf("\ncol: %d", col);
 
-	if(board[row][col] == "") return false;
-	
+	if (strcmp(board[row][col], " ") == 0) {
+        return false; // No collision, the square is empty
+    }	
 	return true;
 }
 
@@ -115,7 +119,7 @@ bool check_for_collision_path(char *board[ROW][COL], char mov_col, int mov_row, 
 	return false;
 }
 
-void move_peice(char *board[COL][ROW], char mov_col, int mov_row, char* coordinate){
+void move_peice(char board[COL][ROW], char mov_col, int mov_row, char* coordinate){
 	//square peice moves from
 	char curr_peice = coordinate[0];
 	char curr_col = coordinate[1]; // a, b, c
@@ -133,10 +137,10 @@ void move_peice(char *board[COL][ROW], char mov_col, int mov_row, char* coordina
 	row_num = mov_row - 'a';		
 	col_num = abs(mov_col - 8);
 
-	board[col_num][row_num] = curr_peice;
+	board[col_num][row_num] = &curr_peice;
 }
 
-bool movePawn(char* board[ROW][COL], char mov_col, int mov_row, char* coordinate){
+bool movePawn(char board[ROW][COL], char mov_col, int mov_row, char* coordinate){
 	
 	//square peice moves from
 	char curr_col = coordinate[1]; // a, b, c
@@ -172,7 +176,7 @@ bool movePawn(char* board[ROW][COL], char mov_col, int mov_row, char* coordinate
 	return false;
 }
 	
-void choose_move(char* board[ROW][COL], char* coordinate){
+void choose_move(char board[ROW][COL], char *coordinate){
 
   	//piece to move
 	char piece_to_move = coordinate[0];
@@ -211,20 +215,20 @@ void choose_move(char* board[ROW][COL], char* coordinate){
 }
 
 int main() {
-	char* coordinate = malloc(5);
-	char *board[ROW][COL] = {
-        	{"r", "n", "b", "q", "k", "b", "n", "r"},
-        	{"p", "p", "p", "p", "p", "p", "p", "p"},
-        	{"", "", "", "", "", "", "", ""},
-        	{"", "", "", "", "", "", "", ""},
-        	{"", "", "", "", "", "", "", ""},
-        	{"", "", "", "", "", "", "", ""},
-        	{"P", "P", "P", "P", "P", "P", "P", "P"},
-        	{"R", "N", "B", "Q", "K", "B", "N", "R"},
-    	};	
+	char *coordinate = malloc(5);
+  bool gameover = false;
 	
-	bool gameover = false;
-	
+  char board[ROW][COL] = {
+    {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+    {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+    {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+};
+
 	print_board(board);
 
 	while(!gameover){
