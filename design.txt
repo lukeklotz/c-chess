@@ -2,7 +2,7 @@
 TODO:
 
 	- peices
-	[]move pawn
+	[x]move pawn
 	[]move knight
 	[]move rook
 	[]move bishop

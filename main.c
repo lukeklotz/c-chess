@@ -92,7 +92,7 @@ bool check_for_collision(char board[ROW][COL], char mov_col, int mov_row){
 	//printf("row: %d", row);
 	//printf("\ncol: %d", col);
 
-	if (strcmp(&board[row][col], " ") == 0) {
+	if (board[row][col] == ' ') {
         return false; // No collision, the square is empty
     }	
 	return true;
@@ -106,9 +106,21 @@ bool check_for_collision_path(char board[ROW][COL], char mov_col, int mov_row, c
 	if (curr_col == mov_col) {
 		// linear vertical move
 		int curr = curr_row;
-		while(curr < mov_row){
-			if(!check_for_collision(board, mov_col, curr)) return true;
-			curr++;
+
+		if(curr > mov_row){
+			// moving peice from the black side to the white side
+			while(curr >= mov_row){
+				if(!check_for_collision(board, mov_col, curr)) return true;
+				printf("curr: %d\n", curr);
+				curr--;
+			}
+			
+		} else {
+			// moving peice from the white side to the black side
+			while(curr < mov_row){
+				if(!check_for_collision(board, mov_col, curr)) return true;
+				curr++;
+			}
 		}
 	} else if(curr_row == mov_row) {
 		// linear horizontal move
@@ -126,18 +138,18 @@ void move_peice(char board[COL][ROW], char mov_col, int mov_row, char* coordinat
  	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
 
 	//find numeric coordinate on board
-	char col_num = curr_col - 'a';		
-	char row_num = abs(curr_row - 8);
+	int col_num = curr_col - 'a';		
+	int row_num = abs(curr_row - 8);
 
-	printf("row num: %d\n", row_num);
-	printf("col num: %d\n", col_num);
+	board[row_num][col_num] = ' ';
 
-	board[col_num][row_num] = ' ';
+	col_num = mov_col - 'a';		
+	row_num = abs(mov_row - 8);
 
-	row_num = mov_row - 'a';		
-	col_num = abs(mov_col - 8);
+	printf("mov row num: %d\n", row_num);
+	printf("mov col num: %d\n", col_num);
 
-	board[col_num][row_num] = curr_peice;
+	board[row_num][col_num] = curr_peice;
 }
 
 bool movePawn(char board[ROW][COL], char mov_col, int mov_row, char* coordinate){
@@ -146,10 +158,10 @@ bool movePawn(char board[ROW][COL], char mov_col, int mov_row, char* coordinate)
 	char curr_col = coordinate[1]; // a, b, c
  	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
 
-	if(curr_col == mov_col && curr_row == 2){
+	if(curr_col == mov_col && curr_row == 2 || curr_row == 7){
 		//starting position
-		int mov_dist = mov_row - curr_row;
-		if(mov_dist <= 3){
+		int mov_dist = abs(mov_row - curr_row);
+		if(mov_dist < 3){
 			if(check_for_collision_path(board, mov_col, mov_row, coordinate)){
 				printf("valid move\n");
 				//move peice
@@ -191,17 +203,14 @@ void choose_move(char board[ROW][COL], char *coordinate){
 	printf("Enter a square to move %s to", coordinate); 
 		
 	if (scanf("%c%d", &col_letter, &row_number) == 2) {
-			printf("Letter: %c\n", col_letter);
-			printf("Number: %d\n", row_number);
+			printf("Col: %c\n", col_letter);
+			printf("Row: %d\n", row_number);
 	} else {
 			printf("Invalid input format.\n");
 	} 	
 
 
 	if(tolower(piece_to_move) == 'p'){
-		//pawn
-		//can move 2 squares from start 
-		//one square if no peice
 		movePawn(board, col_letter, row_number, coordinate);
 	}
 	if(piece_to_move == 'n'){
@@ -209,31 +218,29 @@ void choose_move(char board[ROW][COL], char *coordinate){
 	}
 
 	clearInputBuffer();
-	//TODO: check if square is valid to move to
-	//TODO: if peice between peice and dest square, the peice cannot move, unless its a knight
-	//TODO: check if peice can move in specified direction (knights in L shape, rooks up and down etc..)
 }
 
 int main() {
-	char *coordinate = malloc(5);
+  char *coordinate = malloc(5);
   bool gameover = false;
 	
   char board[ROW][COL] = {
-    {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-    {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-    {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-    {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-};
+		{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+		{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+		{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+		{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+		{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+		{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+		{'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+		{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+	};
 
 	print_board(board);
 
 	while(!gameover){
-	coordinate = choose_piece(&board);		
+	coordinate = choose_piece(board);		
 	choose_move(board, coordinate);
+	print_board(board);
 		
 	}
 }
