@@ -10,4 +10,8 @@ TODO:
 	[]move king
 
 	- utility
-	[] fuction which handles converting square name (A4, E3, etc.. ) to grid coordinates
+	[x] fuction which handles converting square name (A4, E3, etc.. ) to grid coordinates
+	
+	
+Move functions to files
+
