@@ -13,9 +13,7 @@ TODO:
 	[x] fuction which handles converting square name (A4, E3, etc.. ) to grid coordinates
 	
 	
-Move functions to files
-
-choose
-
-check
-move
+	- main functionality
+	[]convert choose_peice to a bool function 
+	[] coordinate is updated and treated as a pointer
+	[]if choose peice returns false (peice not available to move), then the action is repeated

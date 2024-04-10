@@ -11,10 +11,10 @@
 
 
 int main() {
-  char *coordinate = malloc(5);
-  bool gameover = false;
+  	char coordinate[5];
+  	bool gameover = false;
 	
-  char board[ROW][COL] = {
+  	char board[ROW][COL] = {
 		{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
 		{'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
 		{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -28,7 +28,7 @@ int main() {
 	print_board(board);
 
 	while(!gameover){
-		coordinate = choose_piece(board);		
+		choose_piece(board, coordinate);		
 		choose_move(board, coordinate);
 		print_board(board);
 	}

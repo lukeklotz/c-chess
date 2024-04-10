@@ -50,3 +50,10 @@ bool check_for_collision_path(char board[ROW][COL], char mov_col, int mov_row, c
 
 	return false;
 }
+
+bool is_valid_piece(char board[ROW][COL],int row_on_board, int col_on_board, char piece){
+	if (board[col_on_board][row_on_board] == piece){
+		return true;
+	} 
+	return false;
+} 

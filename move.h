@@ -7,6 +7,7 @@
 void move_peice(char board[COL][ROW], char mov_col, int mov_row, char* coordinate);
 bool movePawn(char board[ROW][COL], char mov_col, int mov_row, char* coordinate);
 void choose_move(char board[ROW][COL], char *coordinate);
-char *choose_piece(char board[ROW][COL]);
+bool choose_piece(char board[ROW][COL], char* coordinate);
+void move_knight(char board[ROW][COL], char mov_col, int mov_row, char* coordinate);
 
 #endif

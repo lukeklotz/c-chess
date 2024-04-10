@@ -41,7 +41,6 @@ bool movePawn(char board[ROW][COL], char mov_col, int mov_row, char* coordinate)
 		if(mov_dist < 3){
 			if(check_for_collision_path(board, mov_col, mov_row, coordinate)){
 				printf("valid move\n");
-				//move peice
 				move_peice(board, mov_col, mov_row, coordinate);
 				return true;
 			} else {
@@ -58,6 +57,20 @@ bool movePawn(char board[ROW][COL], char mov_col, int mov_row, char* coordinate)
 	}
 
 	return false;
+}
+
+void move_knight(char board[ROW][COL], char mov_col, int mov_row, char* coordinate){
+	
+	//square peice moves from
+	char curr_col = atoi(&coordinate[1]); // a, b, c
+ 	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
+
+	printf("col: %d\n", curr_col);
+	printf("row: %d\n", curr_row);
+
+	//get valid knight moves
+
+	printf("peice: %c", board[curr_col][curr_row]);
 }
 	
 void choose_move(char board[ROW][COL], char *coordinate){
@@ -81,52 +94,55 @@ void choose_move(char board[ROW][COL], char *coordinate){
 			printf("Invalid input format.\n");
 	} 	
 
-
 	if(tolower(piece_to_move) == 'p'){
 		movePawn(board, col_letter, row_number, coordinate);
 	}
-	if(piece_to_move == 'n'){
+	if(tolower(piece_to_move) == 'n'){
 		//move knight
+		move_knight(board, col_letter, row_number, coordinate);
 	}
-
 	clearInputBuffer();
 }
 
-char *choose_piece(char board[ROW][COL]){
+bool choose_piece(char board[ROW][COL], char* coordinate){
 
     char piece = ' ';
   	char square = ' ';
-    int col_number = 0;
+    int col_on_board = 0;
 
 	bool isValid = false;
 
     printf("Enter a string (e.g., pa4 or rb7): ");
     
-    if (scanf("%c%c%d", &piece, &square, &col_number) == 3) {
-		printf("Letter: %c\n", piece);
-		printf("Letter: %c\n", square);
-		printf("Number: %d\n", col_number);
-    } else {
-		printf("Invalid input format.\n");
-    } 	
+	while(!isValid){
+		if (scanf("%c%c%d", &piece, &square, &col_on_board) == 3) {
+			printf("Letter: %c\n", piece);
+			printf("Letter: %c\n", square);
+			printf("Number: %d\n", col_on_board);
+		} else {
+			printf("Invalid input format.\n");
+		} 	
 
-	clearInputBuffer();
-	
-	// return coordinate 	
-	char* coordinate = malloc(5);
-	sprintf(coordinate,  "%c%c%d", piece, square, col_number);
-
-	//find numeric coordinate on board
-	int row_on_board = square - 'a';		
-	col_number = abs(col_number - 8);
-
-	printf("col: %d\n", row_on_board);
-	printf("num: %d\n", col_number);
-	
-	print_board(board);
+		clearInputBuffer();
 		
-	printf("%s\n", isValid ? "exists" : "DNE");
-	
-	return coordinate;
+		// assign move values to coordinate
+		sprintf(coordinate,  "%c%c%d", piece, square, col_on_board);
+
+		//find numeric coordinate on board
+		int row_on_board = square - 'a';		
+		col_on_board = abs(col_on_board - 8);
+
+		printf("col: %d\n", row_on_board);
+		printf("num: %d\n", col_on_board);
+		
+		print_board(board);
+
+		//check if the selected peice aligns with the coordinate 
+		isValid = is_valid_piece(board, row_on_board, col_on_board, piece);
+			
+		printf("%s\n", isValid ? "exists" : "DNE");
+	}
+
+	return true;
 }
 
