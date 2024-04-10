@@ -62,10 +62,10 @@ bool movePawn(char board[ROW][COL], char mov_col, int mov_row, char* coordinate)
 void move_knight(char board[ROW][COL], char mov_col, int mov_row, char* coordinate){
 	
 	//square peice moves from
-	char curr_col = atoi(&coordinate[1]); // a, b, c
+	char curr_col = coordinate[1]; // a, b, c
  	int curr_row = atoi(&coordinate[2]); // 1, 2 ,3
 
-	printf("col: %d\n", curr_col);
+	printf("col: %c\n", curr_col);
 	printf("row: %d\n", curr_row);
 
 	//get valid knight moves
